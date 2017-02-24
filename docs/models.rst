@@ -117,6 +117,19 @@ Less than 0.5s                        Escape
 More than 0.5s                        Change mapping page (1-6 depending on face button pressed)
 ===================================== ==============
 
+Default button mapping
+----------------------
+==== =================
+Page Keys
+==== =================
+1    A, S, D, Z, X, C
+2    Q, W, E, A, S, D
+3    blank, up, blank, left, down, right
+4    1, 2, 3, 4, 5, 6
+5    all blank
+6    all blank
+==== =================
+
 Future Tone Controller (coming soon)
 ************************************
 .. image:: https://pbs.twimg.com/media/C3ZfWfSUMAAA9Jg.jpg

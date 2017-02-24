@@ -7,7 +7,7 @@ thnikk Keypad Documentation
 ===========================
 Welcome! This is the documentation for all current models of my keypads.
 
-Here you can find feature lists for models, guides to install drivers, remap the keys, reprogram the keypad, and change your switches. This will be updated with my code so it should always be up to date!
+Here you can find feature lists for models, guides to install drivers, remap the keys, and change your switches. This will be updated with my code so it should always be up to date!
 
 Pages
 ^^^^^^^^
