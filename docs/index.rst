@@ -20,6 +20,7 @@ Pages
    models
    driver
    remap
+   program
    switch
    troubleshoot
 
