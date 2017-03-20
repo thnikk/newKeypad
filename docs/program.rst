@@ -58,6 +58,7 @@ You're almost done, all that's left is loading the code. Fortunately, they have 
 
 `4K RGB <https://create.arduino.cc/editor/thnikk/730ced35-bc57-4b74-8e8e-05a4c5d64942/preview>`_
 
+
 The Hard Way (Desktop IDE)
 **************************
 
