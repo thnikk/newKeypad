@@ -48,15 +48,17 @@ You're almost done, all that's left is loading the code. Fortunately, they have 
 
 .. image:: https://puu.sh/teWtO/df51db652d.png
 
-`Basic <https://create.arduino.cc/editor/thnikk/d531845e-0521-4da9-b285-3bada89af0a6/preview>`_
+`Basic <https://create.arduino.cc/editor/thnikk/26f18039-32be-4fe3-a009-4e23419a6454/preview>`_
 
 `LED <https://create.arduino.cc/editor/thnikk/17b2c815-21e5-4f83-8b49-a9630c99a6a8/preview>`_
 
-`RGB <https://create.arduino.cc/editor/thnikk/a891c370-23ac-45bc-8499-0b68f5b8cc98/preview>`_
+`RGB <https://create.arduino.cc/editor/thnikk/eefe8ac7-c0d8-4695-8ec6-2199418b001c/preview>`_
 
-`4K <https://create.arduino.cc/editor/thnikk/743ed14a-3926-4c3c-8b9b-38056e09ea76/preview>`_
+`4K <https://create.arduino.cc/editor/thnikk/e137af8a-9e23-41fb-8e6c-0f7de12ac20a/preview>`_
 
 `4K RGB <https://create.arduino.cc/editor/thnikk/730ced35-bc57-4b74-8e8e-05a4c5d64942/preview>`_
+
+`MacroPad <https://create.arduino.cc/editor/thnikk/469813aa-c98b-4555-b071-00e8ac409226/preview>`_
 
 
 The Hard Way (Desktop IDE)

@@ -37,6 +37,12 @@ More (Optional)
 ***************
 These are some other things you can do after you get your keypad up and running.
 
+Setting the LED mode
+````````````````````
+While the basic model's side button is used exclusively as an escape key, it serves an additional purpose on all models with LEDs. By holding the button down and waiting for the LEDs to blink, you can change the LED mode. Wait for it to blink twice for the secondary action, which is for changing the brightness (or the colors on the custom mode.) For more info on LED modes and the side button for your keypad, please visit the models page here:
+
+`Models <http://docs.thnikk.moe/en/latest/models.html>`_
+
 Remapping and Reprogramming
 ```````````````````````````
 If you're unhappy with the default zx(cv) button mapping of your keypad, visit this page to learn how to easily remap the buttons!
