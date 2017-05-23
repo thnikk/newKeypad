@@ -52,7 +52,7 @@ You're almost done, all that's left is loading the code. Fortunately, they have 
 
 `LED <https://create.arduino.cc/editor/thnikk/17b2c815-21e5-4f83-8b49-a9630c99a6a8/preview>`_
 
-`RGB <https://create.arduino.cc/editor/thnikk/eefe8ac7-c0d8-4695-8ec6-2199418b001c/preview>`_
+`RGB <https://create.arduino.cc/editor/thnikk/eefe8ac7-c0d8-4695-8ec6-2199418b001c/preview>`_ 
 
 `4K <https://create.arduino.cc/editor/thnikk/e137af8a-9e23-41fb-8e6c-0f7de12ac20a/preview>`_
 
