@@ -10,7 +10,7 @@ If you are on Windows 8.1 or lower and you haven't already, follow the driver in
 
 Once the drivers are installed, download and extract Termite. You want to make sure you extract since you need to run it with the .cat file in the same directory.
 
-`Download Termite <http://puu.sh/tsw04/7d8dcf3b6c.zip>`_
+`Download Termite <https://puu.sh/w8Zj5/01aa028013.zip>`_
 
 * Package updated 1/19/17
 
