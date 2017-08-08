@@ -8,7 +8,7 @@ If you are on Windows 8.1 or lower and you haven't already, follow the driver in
 
 `Driver Installation <http://docs.thnikk.moe/en/latest/driver.html>`_
 
-Once the drivers are installed, download and extract Termite. You want to make sure you extract since you need to run it with the .cat file in the same directory.
+Once the drivers are installed, download and extract Termite. You want to make sure you extract since you need to run it with the .ini file in the same directory.
 
 `Download Termite <https://puu.sh/w8Zj5/01aa028013.zip>`_
 
