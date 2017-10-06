@@ -96,7 +96,7 @@ char mapping[2][3];
 byte rgb[2][3];
 
 // Version number (change to update EEPROM values {can only be 0 or 1})
-bool version = 1;
+bool version = 0;
 
 // Universal
 byte ledMode = 0;
@@ -700,6 +700,6 @@ unsigned long idleSpeed = 1; // Speed of effect (lower is faster)
 byte idleColors[numkeys][3];
 void idleEffect(){
   if ((millis() - idleMillis) > idleSpeed) {
-    
+
   }
 }

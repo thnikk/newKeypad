@@ -44,9 +44,6 @@ const byte button[] = { 2, 3, 4 };
 // Makes button press/release action happen only once
 bool pressed[2];
 
-// Array for storing bounce values
-bool bounce[3];
-
 // Mapping multidimensional array
 char mapping[2][3];
 
@@ -81,9 +78,7 @@ unsigned long previousMillis = 0;
 byte set = 0;
 
 // Bounce declaration
-Bounce b1d = Bounce();
-Bounce b2d = Bounce();
-Bounce b3d = Bounce();
+Bounce * bounce = new Bounce[numkeys];
 
 void setup() {
   Serial.begin(9600);
@@ -92,16 +87,11 @@ void setup() {
 
   // Set input pullup resistors
   for (int x = 0; x <= numkeys; x++) {
-   pinMode(button[x], INPUT_PULLUP);
+    pinMode(button[x], INPUT_PULLUP);
+    bounce[x].attach(button[x]);
+    bounce[x].interval(8);
   }
 
-  // Bounce initializtion
-  b1d.attach(button[0]);
-  b1d.interval(8);
-  b2d.attach(button[1]);
-  b2d.interval(8);
-  b3d.attach(button[2]);
-  b3d.interval(8);
 }
 
 void loadEEPROM() {
@@ -123,7 +113,7 @@ void loadEEPROM() {
 void loop() {
 
   // Run to get latest bounce values
-  bounceSetup(); // Moved here for program-wide access to latest debounced button values
+  for(byte x=0; x<=numkeys; x++) bounce[x].update();
 
   if ((millis() - previousMillis) > 1000) { // Check once a second to reduce overhead
     if (Serial && set == 0) { // Run once when serial monitor is opened to avoid flooding the serial monitor
@@ -312,34 +302,22 @@ byte inputInterpreter(String input) { // Checks inputs for a preceding colon and
   else return 0;
 }
 
-
-// Sets up bounce inputs and sets values for the bounce array
-void bounceSetup() {
-  b1d.update();
-  b2d.update();
-  b3d.update();
-
-  bounce[0] = b1d.read();
-  bounce[1] = b2d.read();
-  bounce[2] = b3d.read();
-}
-
 // Does keyboard stuff
 void keyboard(){
 
-  if(!bounce[2]) Keyboard.press(177);
-  if(bounce[2]) Keyboard.release(177);
+  if(!bounce[numkeys].read()) Keyboard.press(177);
+  if(bounce[numkeys].read()) Keyboard.release(177);
 
   for (int a = 0; a < numkeys; a++) {
     // Cycles through key and modifiers set
     if (!pressed[a]) {
-      for (int b = 0; b < 3; b++) if (!bounce[a]) {
+      for (int b = 0; b < 3; b++) if (!bounce[a].read()) {
         Keyboard.press(mapping[a][b]);
         pressed[a] = 1;
       }
     }
     if (pressed[a]) {
-      for (int b = 0; b < 3; b++) if (bounce[a]) {
+      for (int b = 0; b < 3; b++) if (bounce[a].read()) {
         Keyboard.release(mapping[a][b]);
         pressed[a] = 0;
       }
