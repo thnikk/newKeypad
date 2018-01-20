@@ -5,14 +5,14 @@ Keypad Models
 Basic Keypad
 ************
 
-.. image:: http://thnikk.moe/keypad/models/img/Basic%20(Medium).jpg
+.. image:: http://thnikk.moe/img/docs/models/2k.png
 
 This is the no bells and whistles model. 2 Keys and a side button. The side button functions as an escape key and offers no additional functionality.
 
 LED Keypad
 ************
 
-.. image:: http://thnikk.moe/keypad/models/img/LED%20(Medium).jpg
+.. image:: http://thnikk.moe/img/docs/models/2kled.png
 
 This is the LED model. It features a white LED on each of the two face keys. The side button functions as escape and is also used to change LED modes and brightness.
 
@@ -42,7 +42,7 @@ Order           Mode
 RGB Keypad
 ************
 
-.. image:: http://thnikk.moe/keypad/models/img/RGB%20(Medium).jpg
+.. image:: http://thnikk.moe/img/docs/models/2krgb.png
 
 This is the RGB model. It features an RGB LED under each of the two face keys. The side button functions as escape and is also used to change LED modes, brightness, and the colors of the keys on the "custom" LED mode. Since it uses LEDs mounted underneath the switches, Gateron switches are the only option since their semi-transparent housing allows this to work and works perfectly for diffusing the light of the LEDs.
 
@@ -70,10 +70,10 @@ Order           Mode
 6               Color Change - Colors cycle in steps per-press per-key.
 ==============  ==============
 
-4K Keypad
+4K RGB Keypad
 ************
 
-.. image:: http://thnikk.moe/keypad/models/img/4K%20(Medium).jpg
+.. image:: http://thnikk.moe/img/docs/models/4krgb.png
 
 This is the 4k model. It's the same as the RGB model but with 4 keys instead of 2. The side button functions as escape and is also used to change LED modes, brightness, and the colors of the keys on the "custom" LED mode. Since it uses LEDs mounted underneath the switches, Gateron switches are the only option since their semi-transparent housing allows this to work and works perfectly for diffusing the light of the LEDs.
 
@@ -104,7 +104,7 @@ Order           Mode
 
 Macropad
 ********
-.. image:: http://thnikk.moe/img/docs/macropad.png
+.. image:: http://thnikk.moe/img/docs/models/macro.png
 
 By popular request, I made a keypad focused less on crazy lights and more on people that want the ability to quickly switch between button mappings. This model features not only the ability to map each key to up to 3 keys, but also six "pages" of mappings that you can change by holding the side button and pressing one of the six keys. It also has a single RGB LED to show the current page.
 
