@@ -30,7 +30,6 @@
 #include <EEPROM.h>
 #include <Bounce2.h>
 #include <Keyboard.h>
-#include <Mouse.h>
 
 // Version number (increment to update EEPROM values)
 bool version = 0;
@@ -49,7 +48,7 @@ bool pressed[2];
 char mapping[2][3];
 
 // Arrays for modifier interpreter
-byte specialLength = 33; // Number of "special keys"
+byte specialLength = 30; // Number of "special keys"
 String specialKeys[] = {
   "shift", "ctrl", "super",
   "alt", "f1", "f2", "f3",
@@ -60,8 +59,7 @@ String specialKeys[] = {
   "enter", "home", "end",
   "pgup", "pgdn", "up",
   "down", "left", "right",
-  "tab", "escape", "MB1", 
-  "MB2", "MB3"
+  "tab", "escape", "altGr"
 };
 byte specialByte[] = {
   129, 128, 131, 130,
@@ -71,7 +69,7 @@ byte specialByte[] = {
   209, 212, 178, 176,
   210, 213, 211, 214,
   218, 217, 216, 215,
-  179, 177, 1, 2, 3
+  179, 177, 134
 };
 
 byte inputBuffer; // Stores specialByte after conversion
@@ -314,23 +312,13 @@ void keyboard(){
     // Cycles through key and modifiers set
     if (!pressed[a]) {
       for (int b = 0; b < 3; b++) if (!bounce[a].read()) {
-        if (mapping[a][b] > 3) Keyboard.press(mapping[a][b]);
-        else {
-          if (mapping[a][b] == 1) Mouse.press(MOUSE_LEFT);
-          else if (mapping[a][b] == 2) Mouse.press(MOUSE_RIGHT);
-          else if (mapping[a][b] == 3) Mouse.press(MOUSE_MIDDLE);
-        }
+        Keyboard.press(mapping[a][b]);
         pressed[a] = 1;
       }
     }
     if (pressed[a]) {
       for (int b = 0; b < 3; b++) if (bounce[a].read()) {
-        if (mapping[a][b] > 3) Keyboard.release(mapping[a][b]);
-        else {
-          if (mapping[a][b] == 1) Mouse.release(MOUSE_LEFT);
-          else if (mapping[a][b] == 2) Mouse.release(MOUSE_RIGHT);
-          else if (mapping[a][b] == 3) Mouse.release(MOUSE_MIDDLE);
-        }
+        Keyboard.release(mapping[a][b]);
         pressed[a] = 0;
       }
     }
