@@ -25,7 +25,7 @@ Uploading the code
 ------------------
 Open the folder in Atom (the folder titled trinketM0) and it should show up in the left panel under "Project." Click on the src folder and open src.ino. Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. If all goes well, it should upload the code to the keypad!
 
-For keypads purchased before 3/15/18
+ONLY for keypads purchased before 3/15/18
 ====================================
 
 The Easy Way (Web Editor)
