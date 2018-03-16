@@ -1,6 +1,33 @@
 Programming Your Keypad
 =======================
 
+PlatformIO
+**********
+
+What is it?
+-----------
+PlatformIO is an IDE like the Arduino IDE but is integrated with your text editor!
+
+Download Atom
+-------------
+Download and install Atom from here: https://atom.io/
+
+Install PlatformIO
+------------------
+Launch atom and press ctrl+, which will open the settings menu. Click on install, type "platformio" into the search box and hit enter. Click install on "platformio-ide" and wait for it to install. When it finishes, you should see a button in the top right that tells you to restart to apply the changes. Hit restart and you're good to go!
+
+Download the Code
+-----------------
+The code can be found `here<https://github.com/thnikk/trinketM0>`_.
+Click the "clone or download" button and select "download zip." Extract it to wherever you like (I would recommend your desktop or documents folder.)
+
+Uploading the code
+------------------
+Open the folder in Atom (the folder titled trinketM0) and it should show up in the left panel under "Project." Click on the src folder and open src.ino. Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. If all goes well, it should upload the code to the keypad!
+
+For keypads purchased before 3/15/18
+====================================
+
 The Easy Way (Web Editor)
 *************************
 
@@ -18,7 +45,7 @@ Making an Arduino Account
 
 Don't worry, they won't bombard you with emails (yet*) and you don't need to give them any personal information, they just require an account so you can manage your code. You can make your account from this page here:
 
-`Sing Up <https://id.arduino.cc/auth/signup>`_
+`Sign Up <https://id.arduino.cc/auth/signup>`_
 
 You will have to verify your account through your email (don't use a fake one) and then you're done!
 
@@ -52,7 +79,7 @@ You're almost done, all that's left is loading the code. Fortunately, they have 
 
 `LED <https://create.arduino.cc/editor/thnikk/17b2c815-21e5-4f83-8b49-a9630c99a6a8/preview>`_
 
-`RGB <https://create.arduino.cc/editor/thnikk/eefe8ac7-c0d8-4695-8ec6-2199418b001c/preview>`_ 
+`RGB <https://create.arduino.cc/editor/thnikk/eefe8ac7-c0d8-4695-8ec6-2199418b001c/preview>`_
 
 `4K <https://create.arduino.cc/editor/thnikk/e137af8a-9e23-41fb-8e6c-0f7de12ac20a/preview>`_
 
@@ -102,7 +129,7 @@ Now you can click on the right arrow to compile and upload the code. Don't worry
 
 
 Making Changes to the Firmware
-******************************
+==============================
 
 Understanding the basics
 ------------------------
