@@ -14,7 +14,7 @@ Download and install Atom from here: https://atom.io/
 
 Install PlatformIO
 ------------------
-Launch atom and press ctrl+, which will open the settings menu. Click on install, type "platformio" into the search box and hit enter. Click install on "platformio-ide" and wait for it to install. When it finishes, you should see a button in the top right that tells you to restart to apply the changes. Hit restart and you're good to go!
+Launch atom and press ctrl and comma which will open the settings menu. Click on install, type "platformio" into the search box and hit enter. Click install on "platformio-ide" and wait for it to install. It should ask if you want to install clang for auto-completion but it's not necessary so you can just ignore it. When the installation finishes, you should see a button in the top right that tells you to restart to apply the changes. Hit restart and you're good to go!
 
 Download the Code
 -----------------
@@ -23,7 +23,7 @@ Click the "clone or download" button and select "download zip." Extract it to wh
 
 Uploading the code
 ------------------
-Open the folder in Atom (the folder titled trinketM0) and it should show up in the left panel under "Project." Click on the src folder and open src.ino. Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. If all goes well, it should upload the code to the keypad!
+Open the folder in Atom (the folder titled trinketM0) and it should show up in the left panel under "Project." Click on the src folder and open main.ino. Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. If all goes well, it should upload the code to the keypad!
 
 ONLY for keypads purchased before 3/15/18
 ====================================
