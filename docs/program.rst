@@ -18,7 +18,7 @@ Launch atom and press ctrl and comma which will open the settings menu. Click on
 
 Download the Code
 -----------------
-The code can be found `here. <https://github.com/thnikk/trinketM0>`_
+The code can be found `here<https://github.com/thnikk/trinketM0>`_ (or `here<https://github.com/thnikk/trinketM0Macro>`_ for macropad users.)
 Click the "clone or download" button and select "download zip." Extract it to wherever you like (I would recommend your desktop or documents folder.)
 
 Uploading the code
