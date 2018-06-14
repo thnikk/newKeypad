@@ -26,7 +26,7 @@ Uploading the code
 
 .. image:: https://puu.sh/AEZHT/f90d1213e9.png
 
-Open the folder in Atom (it should be called trinketm0-master but make sure it's the one with the lib and src folders in it like the picture) and it should show up in the left panel under "Project." Click on the src folder and open main.ino. Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. If all goes well, it should upload the code to the keypad!
+Open the folder in Atom (it should be called trinketm0-master but make sure it's the one with the lib and src folders in it like the picture) and it should show up in the left panel under "Project." Click on the src folder and open main.ino. Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. You may need to try a few times and if it tells you that it can't find the port, just try unplugging the keypad and plugging it back in. If all goes well, it should upload the code to the keypad!
 
 ONLY for keypads purchased before 3/15/18
 ====================================
