@@ -33,6 +33,32 @@ Order           Mode
 6               Color Change - Colors cycle in steps per-press per-key.
 ==============  ==============
 
+Touch Keypad
+************
+
+.. image:: https://img.etsystatic.com/il/c80397/1536204894/il_fullxfull.1536204894_7bnf.jpg
+
+A 2-key keypad that uses two capacitive metal pads instead of switches, which results in faster key presses (by removing key travel) and a slimmer keypad. It features LED modes specifically rewritten for this model and a side button that is... a screw? The side screw is just like the two top keys and will press the mapped key when touched (escape by default.)
+
+LED mode can be set with Termite or the Arduino Serial Monitor and settings will be saved to the keypad.
+
+
+Side button functionality
+-------------------------
+Functions as a regular key like the two face keys.
+
+LED modes
+-------------------------
+==============  ==============
+Mode            Description
+==============  ==============
+Cycle           Fades through rainbow; White when key is pressed; Off when side button is pressed
+Color Change    Colors cycle in steps per-press per-key.
+BPS             Color changes depending number of keypresses per second and turns white while key is pressed
+Custom          LED uses user-specified color (can be set through Termite)
+Off             LED is turned off
+==============  ==============
+
 
 RGB Keypad
 ************
