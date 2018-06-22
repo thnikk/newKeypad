@@ -49,17 +49,17 @@ Functions as a regular key like the two face keys.
 
 LED modes
 -------------------------
-=================  ==============
-Mode               Description
-=================  ==============
-Cycle              Fades through rainbow; White when key is pressed; Off when side button is pressed
-Reactive           Turns to white when pressed and fades through r>g>b>off when released
-Reactive Inverted  Fades through r>g>b>off when pressed and turns to white when released 
-Color Change       Colors cycle in steps per-press per-key.
-BPS                Color changes depending number of keypresses per second and turns white while key is pressed
-Custom             LED uses user-specified color (can be set through Termite)
-Off                LED is turned off
-==============     ==============
+================= ==============
+Mode              Description
+================= ==============
+Cycle             Fades through rainbow; White when key is pressed; Off when side button is pressed
+Reactive          Turns to white when pressed and fades through r>g>b>off when released
+Reactive Inverted Fades through r>g>b>off when pressed and turns to white when released
+Color Change      Colors cycle in steps per-press per-key.
+BPS               Color changes depending number of keypresses per second and turns white while key is pressed
+Custom            LED uses user-specified color (can be set through Termite)
+Off               LED is turned off
+================= ==============
 
 
 RGB Keypad
