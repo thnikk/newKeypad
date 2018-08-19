@@ -21,9 +21,9 @@ Download the Code
 
 Click the link for your respective model to go to the GitHub page that contains the necessary code. Click the "clone or download" button and then select "download zip." Extract it to wherever you like (I would recommend your desktop or documents folder.)
 
-`Basic/RGB 2K/4K <https://github.com/thnikk/trinketM0>`_
-`MacroPad <https://github.com/thnikk/trinketM0Macro>`_
-`Touch Keypad <https://github.com/thnikk/touchPad>`_
+- `Basic/RGB 2K/4K <https://github.com/thnikk/trinketM0>`_
+- `MacroPad <https://github.com/thnikk/trinketM0Macro>`_
+- `Touch Keypad <https://github.com/thnikk/touchPad>`_
 
 Uploading the code
 ------------------
