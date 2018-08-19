@@ -8,6 +8,7 @@ What is it?
 -----------
 PlatformIO is an IDE like the Arduino IDE but is integrated with your text editor!
 
+
 Download Atom
 -------------
 Download and install Atom from here: https://atom.io/
@@ -30,7 +31,7 @@ Uploading the code
 
 .. image:: https://puu.sh/BgHur/d4507e79bb.png
 
-Open the folder in Atom that contains the "platformio.ini" file and it should show up in the left panel under "Project." Click on the folder with the same title as the parent folder and open the file with the same title with the .ino extension (which should be something like trinketM0-master > trinketM0 > trinketM0.ino). Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. You may need to try a few times and if it tells you that it can't find the port, just try unplugging the keypad and plugging it back in. If all goes well, it should upload the code to the keypad!
+Open the folder in Atom that you just extracted from the zip that contains the "platformio.ini" file and it should show up in the left panel under "Project." It should be called <code>-master, but make sure it's the one that contains platformio.ini since there can be two of the folders depending on how you extracted the zip. Click on the folder with the same title as the parent folder and open the file with the same title with the .ino extension (which should be something like trinketM0-master > trinketM0 > trinketM0.ino). Make sure your keypad is plugged in and press F7. Type "upload" and select the correct option for your model. You may need to try a few times and if it tells you that it can't find the port, just try unplugging the keypad and plugging it back in. If all goes well, it should upload the code to the keypad!
 
 ONLY for keypads purchased before 3/15/18
 ====================================
