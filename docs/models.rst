@@ -40,12 +40,7 @@ Touch Keypad
 
 A 2-key keypad that uses two capacitive metal pads instead of switches, which results in faster key presses (by removing key travel) and a slimmer keypad. It features LED modes specifically rewritten for this model and a side button that is... a screw? The side screw is just like the two top keys and will press the mapped key when touched (escape by default.)
 
-LED mode can be set with Termite or the Arduino Serial Monitor and settings will be saved to the keypad.
-
-
-Side button functionality
--------------------------
-Functions as a regular key like the two face keys.
+Unlike the non-touch models, all configuration of the keypad can be done using a program like Termite and all settings will be saved to the keypad. This frees up the side button to function as a regular key and it can be remapped just like the top buttons.
 
 LED modes
 -------------------------
@@ -123,6 +118,31 @@ Order           Mode
 5               BPM - LEDs turn white when pressed and change color depending on how much you hit them per second when released.
 6               Color Change - Colors cycle in steps per-press per-key.
 ==============  ==============
+
+4K Touch Keypad
+************
+
+.. image:: https://i.imgur.com/VrA3h71.jpg
+
+Looking for something slimmer, quieter, more portable, or all three? This 4-key keypad primarily for Mania and Taiko uses two capacitive pads instead of switches, which results in faster key presses (by eliminating key travel) and a slimmer design. It features LED modes specifically rewritten for this model and a side button that is... a screw? The side screw is just like the two top keys and will press the mapped key when touched (escape by default.)
+
+Unlike the non-touch models, all configuration of the keypad can be done using a program like Termite and all settings will be saved to the keypad. This frees up the side button to function as a regular key and it can be remapped just like the top buttons.
+
+
+LED modes
+-------------------------
+================= ==============
+Mode              Description
+================= ==============
+Cycle             Fades through rainbow; White when key is pressed; Off when side button is pressed
+Reactive          Turns to white when pressed and fades through r>g>b>off when released
+Reactive Inverted Fades through r>g>b>off when pressed and turns to white when released
+Color Change      Colors cycle in steps per-press per-key.
+BPS               Color changes depending number of keypresses per second and turns white while key is pressed
+Custom            LED uses user-specified color (can be set through Termite)
+Off               LED is turned off
+================= ==============
+
 
 
 4K RGB Keypad
