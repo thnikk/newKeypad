@@ -173,8 +173,38 @@ Order           Mode
 3               Push Off - LEDs are normally white and fade from red to green to blue to off when the keys are pressed.
 4               Custom - LED color can be set per-key.
 5               BPM - LEDs turn white when pressed and change color per-key depending on how much you hit them per second when released.
-6               Taiko - Color scheme for Taiko (orange on outside and blue on inside.)
-7               Color Change - Colors cycle in steps per-press per-key.
+6               Color Change - Colors cycle in steps per-press per-key.
+==============  ==============
+
+7K RGB Keypad
+************
+
+.. image::https://i.etsystatic.com/10408775/r/il/e3a07b/1682539033/il_fullxfull.1682539033_e7fs.jpg
+
+A keypad made for 5K and 7K osu!Mania. This keypad features seven LEDs for interesting LED modes and full NKRO. The bottom key uses a 2x width angled keycap for better ergonomics. There is also a multi-function key (this is the same as the side button on my other models) that can be used to either configure your keypad or as a simple escape key.
+
+Multi-function button
+-------------------------
+===================================== ==============
+Hold time                             Functionality
+===================================== ==============
+Less than 0.5s                        Escape
+0.5 - 1.5s                            Change LED mode
+more than 1.5s                        Change brightness (Press key 1 to lower and key 2 to raise while holding the button)
+more than 1.5s (on custom LED mode)   Change color per-key
+===================================== ==============
+
+LED modes
+-------------------------
+==============  ==============
+Order           Mode
+==============  ==============
+1               Cycle - Fades through rainbow.
+2               Reactive - Turns LEDs on when pressed and fades from red to green to blue to off when released.
+3               Push Off - LEDs are normally white and fade from red to green to blue to off when the keys are pressed.
+4               Custom - LED color can be set per-key.
+5               BPM - LEDs turn white when pressed and change color per-key depending on how much you hit them per second when released.
+6               Color Change - Colors cycle in steps per-press per-key.
 ==============  ==============
 
 Macropad
@@ -205,6 +235,9 @@ Page Keys
 6    all blank
 ==== =================
 
+Deprecated
+==========
+
 Future Tone Controller
 **********************
 .. image:: https://img0.etsystatic.com/204/0/10408775/il_fullxfull.1360528126_hpn6.jpg
@@ -214,11 +247,6 @@ This is the small controller I made for Hatsune Miku: Project Diva Future Tone f
 .. image:: https://img1.etsystatic.com/211/0/10408775/il_fullxfull.1407795821_2vpk.jpg
 
 .. image:: https://img1.etsystatic.com/214/0/10408775/il_fullxfull.1407795827_4g75.jpg
-
-Deprecated
-==========
-
-These are models that I no longer make.
 
 LED Keypad
 ************
