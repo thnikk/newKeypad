@@ -179,7 +179,7 @@ Order           Mode
 7K RGB Keypad
 ************
 
-.. image::https://i.etsystatic.com/10408775/r/il/e3a07b/1682539033/il_fullxfull.1682539033_e7fs.jpg
+.. image:: https://i.etsystatic.com/10408775/r/il/e3a07b/1682539033/il_fullxfull.1682539033_e7fs.jpg
 
 A keypad made for 5K and 7K osu!Mania. This keypad features seven LEDs for interesting LED modes and full NKRO. The bottom key uses a 2x width angled keycap for better ergonomics. There is also a multi-function key (this is the same as the side button on my other models) that can be used to either configure your keypad or as a simple escape key.
 
