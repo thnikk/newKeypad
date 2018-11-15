@@ -1,22 +1,19 @@
-/*************************************************
-  Basic/Basic+ Keypad
-    Written for Pro Micro/Leonardo. Features
-    1000hz polling rate and button remapper. Can
-    be upgraded to LED fairly easily by wiring
-    positive ends of the LEDs to pin 5 and 6.
-
-    As of 2/5/17, uses new remapper that allows
-    for more modifiers to be used. Also prevents
-    false-triggering making the keypad enter
-    the remapper by requiring an input of 0
-    before use.
+/*****************************************************
+  LED Keypad
+    New LED code that implements the new button
+    remapper. Since the side button has multiple
+    functions on this model (LED mode switching,
+    brightness adjustment, color adjustment, and
+    escape) there is only one page of macros, and
+    the keypad will need to be remapped every time
+    you wish to change macros.
 
   Key Numbering
     ---------
   - | 1 | 2 |
     ---------
   ^ Side button is key 3
-  *Pinout is 2, 3, 4 for buttons 1, 2, and 3
+  *Pinout is 2, 4, 5 for buttons 1, 2, and 3
 
   For more info, please visit:
   ----> http://thnikk.moe/
@@ -31,8 +28,8 @@
 #include <Bounce2.h>
 #include <Keyboard.h>
 
-// Version number (increment to update EEPROM values)
-bool version = 0;
+// Version number (change to update EEPROM values)
+bool version = 1;
 char initMapping[] = {"zx"};
 
 // How many keys (0 indexed)
@@ -44,11 +41,44 @@ const byte button[] = { 2, 3, 4 };
 // Makes button press/release action happen only once
 bool pressed[2];
 
+// Array for storing bounce values
+bool bounce[3];
+
+unsigned long previousMillis = 0;
+byte set = 0;
+
+// Bounce declaration
+Bounce b1d = Bounce();
+Bounce b2d = Bounce();
+Bounce b3d = Bounce();
+
 // Mapping multidimensional array
 char mapping[2][3];
 
+// LED array
+byte led[2];
+byte ledPin[2] = {5, 6};
+
+// Universal
+byte ledMode = 1;
+float b = 1.0;
+unsigned long limitMillis = 0;
+byte ledMax = 100;
+
+// LED modes
+bool breatheFlip = 0;
+byte breatheVal = 0;
+
+// Side button
+unsigned long s = 500;
+unsigned long m = 1500;
+unsigned long sideMillis = 0;
+unsigned long brightMillis = 0;
+byte hold = 0;
+byte blink = 0;
+
 // Arrays for modifier interpreter
-byte specialLength = 31; // Number of "special keys"
+byte specialLength = 29; // Number of "special keys"
 String specialKeys[] = {
   "shift", "ctrl", "super",
   "alt", "f1", "f2", "f3",
@@ -59,7 +89,7 @@ String specialKeys[] = {
   "enter", "home", "end",
   "pgup", "pgdn", "up",
   "down", "left", "right",
-  "tab", "escape", "altGr"
+  "tab"
 };
 byte specialByte[] = {
   129, 128, 131, 130,
@@ -69,29 +99,32 @@ byte specialByte[] = {
   209, 212, 178, 176,
   210, 213, 211, 214,
   218, 217, 216, 215,
-  179, 177, 134
+  179
 };
 
 byte inputBuffer; // Stores specialByte after conversion
 
-unsigned long previousMillis = 0;
-byte set = 0;
-
-// Bounce declaration
-Bounce * bounce = new Bounce[numkeys];
 
 void setup() {
   Serial.begin(9600);
-  // Load + Initialize EEPROM
+  // Load + Init EEPROM
   loadEEPROM();
 
   // Set input pullup resistors
-  for (int x = 0; x <= numkeys; x++) {
-    pinMode(button[x], INPUT_PULLUP);
-    bounce[x].attach(button[x]);
-    bounce[x].interval(8);
+  for (int x = 0; x < 3; x++) {
+   pinMode(button[x], INPUT_PULLUP);
   }
 
+  // Set LEDs as outputs
+  for (int x = 0; x < numkeys; x++) pinMode(ledPin[x], OUTPUT);
+
+  // Bounce initializtion
+  b1d.attach(button[0]);
+  b1d.interval(8);
+  b2d.attach(button[1]);
+  b2d.interval(8);
+  b3d.attach(button[2]);
+  b3d.interval(8);
 }
 
 void loadEEPROM() {
@@ -99,6 +132,8 @@ void loadEEPROM() {
   if (EEPROM.read(0) != version) {
     // Single values
     EEPROM.write(0, version);
+    EEPROM.write(20, 0); // Start LED mode on cycle for testing
+    EEPROM.write(21, 50);// Start b at half
     for (int x = 0; x < numkeys; x++) {
       for (int  y= 0; y < 3; y++) {
         if (y == 0) EEPROM.write(40+(x*3)+y, int(initMapping[x]));
@@ -108,12 +143,15 @@ void loadEEPROM() {
   }
   // Load values from EEPROM
   for (int x = 0; x < numkeys; x++) for (int  y= 0; y < 3; y++) mapping[x][y] = char(EEPROM.read(40+(x*3)+y));
+  ledMode = EEPROM.read(20);
+  b = EEPROM.read(21);
+  b = b / 100;
 }
 
 void loop() {
 
   // Run to get latest bounce values
-  for(byte x=0; x<=numkeys; x++) bounce[x].update();
+  bounceSetup(); // Moved here for program-wide access to latest debounced button values
 
   if ((millis() - previousMillis) > 1000) { // Check once a second to reduce overhead
     if (Serial && set == 0) { // Run once when serial monitor is opened to avoid flooding the serial monitor
@@ -127,7 +165,57 @@ void loop() {
     previousMillis = millis();
   }
 
+  if (ledMode == 0) reactive(0);
+  if (ledMode == 1) reactive(1);
+  if (ledMode == 2) breathe();
+  if (ledMode == 3) for(int x = 0; x < numkeys; x++) if (hold != 3) setColor(ledMax, x);
+  if (ledMode == 4) for(int x = 0; x < numkeys; x++) if (hold != 3) setColor(0, x);
+
+  sideButton();
   keyboard();
+}
+
+void reactive(byte flip) {
+  if ((millis() - limitMillis) > 2) {
+    for (int x = 0; x < numkeys; x++){
+      if ((!bounce[x] && !flip) || (bounce[x] && flip)) led[x] = ledMax;
+      if ((bounce[x] && !flip) || (!bounce[x] && flip)) {
+        if (led[x] > 0) {
+          byte buffer = led[x];
+          buffer--;
+          led[x] = buffer;
+        }
+      }
+      setLED(x);
+    }
+    limitMillis = millis();
+  }
+}
+
+void breathe() {
+  if ((millis() - limitMillis) > 20) {
+    if (!breatheFlip) {
+      breatheVal++;
+      if (breatheVal == ledMax) breatheFlip = 1;
+    }
+    if (breatheFlip) {
+      breatheVal--;
+      if (breatheVal == 0) breatheFlip = 0;
+    }
+    for (int x = 0; x < numkeys; x++) setColor(breatheVal, x);
+    limitMillis = millis();
+  }
+}
+
+// LED modes
+
+// Subfunctions for LED modes
+void setLED(byte key) {
+  analogWrite(ledPin[key], led[key] * b);
+}
+
+void setColor(byte color, byte key) {
+  analogWrite(ledPin[key], color * b);
 }
 
 
@@ -302,22 +390,101 @@ byte inputInterpreter(String input) { // Checks inputs for a preceding colon and
   else return 0;
 }
 
+void sideButton() {
+  // Press action: Sets hold value depending on how long the side button is held
+  if (!bounce[2]) {
+    if ((millis() - sideMillis) > 8 && (millis() - sideMillis) < s)  hold = 1;
+    if ((millis() - sideMillis) > s && (millis() - sideMillis) < m)  hold = 2;
+    if ((millis() - sideMillis) > m && (ledMode != 4)) hold = 3; // Don't run on Off mode
+  }
+  // Release action
+  if (bounce[2]) {
+    // Press and release escape
+    if (hold == 1) {
+      Keyboard.press(KEY_ESC);
+      delay(12);
+      Keyboard.release(KEY_ESC);
+    }
+    // Change LED mode
+    if (hold == 2) {
+      ledMode++;
+      if (ledMode > 4) ledMode = 0;
+      EEPROM.write(20, ledMode);
+    }
+    // Save brightness
+    if (hold == 3) {
+      if (ledMode != 3) {
+        for (int x = 0; x < numkeys; x++) {
+          EEPROM.write(21, b * 100);
+        }
+      }
+    }
+    hold = 0;
+    sideMillis = millis();
+  }
+
+  // brightness changer
+  if (hold == 3 && ledMode != 3) {
+    // Poll 10 times a second
+    if ((millis() - brightMillis) > 50) {
+      // Lower b
+      if (!bounce[0]) {
+        if (b > 0.1) b-=0.02;
+      }
+      // Raise b
+      if (!bounce[1]) {
+        if (b < 0.98) b+=0.02;
+      }
+      brightMillis = millis();
+    }
+  }
+
+  // Blink code
+  if (blink != hold) {
+    if (hold == 2) {
+      for (int x = 0; x < 2; x++) setColor(0, x);
+      delay(20);
+      for (int x = 0; x < 2; x++) setColor(ledMax, x);
+      delay(50);
+    }
+    if (hold == 3) {
+      for (int y = 0; y < 2; y++) {
+        for (int x = 0; x < 2; x++) setColor(0, x);
+        delay(20);
+        for (int x = 0; x < 2; x++) setColor(ledMax, x);
+        delay(50);
+      }
+    }
+    blink = hold;
+  }
+}
+
+// Sets up bounce inputs and sets values for the bounce array
+void bounceSetup() {
+  b1d.update();
+  b2d.update();
+  b3d.update();
+
+  bounce[0] = b1d.read();
+  bounce[1] = b2d.read();
+  bounce[2] = b3d.read();
+}
+
 // Does keyboard stuff
 void keyboard(){
 
-  if(!bounce[numkeys].read()) Keyboard.press(177);
-  if(bounce[numkeys].read()) Keyboard.release(177);
-
+  // Test bounce code
   for (int a = 0; a < numkeys; a++) {
     // Cycles through key and modifiers set
     if (!pressed[a]) {
-      for (int b = 0; b < 3; b++) if (!bounce[a].read()) {
+      // Runs 3 times for each key
+      for (int b = 0; b < 3; b++) if (!bounce[a] && hold != 3) {
         Keyboard.press(mapping[a][b]);
         pressed[a] = 1;
       }
     }
     if (pressed[a]) {
-      for (int b = 0; b < 3; b++) if (bounce[a].read()) {
+      for (int b = 0; b < 3; b++) if (bounce[a] || hold == 3) {
         Keyboard.release(mapping[a][b]);
         pressed[a] = 0;
       }

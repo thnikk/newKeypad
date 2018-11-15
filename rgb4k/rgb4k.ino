@@ -1,5 +1,7 @@
+#include <Arduino.h>
+
 /*****************************************************
-  New RGB keypad
+  New 4K RGB keypad
     Written to replace the old code to revert back
     from RGBW to RGB LEDs. Gateron's transparent body
     switches are no longer available so the revert
@@ -8,17 +10,17 @@
 
     It also implements the new button remapper. Since
     the side button has multiple functions on this
-    model (LED mode switching, b adjustment,
+    model (LED mode switching, brightness adjustment,
     color adjustment, and escape) there is only one
     page of macros, and the keypad will need to be
     remapped every time you wish to change macros.
 
   Key Numbering
-    ---------
-  - | 1 | 2 |
-    ---------
-  ^ Side button is key 3
-  *Pinout is 2, 4, 5 for buttons 1, 2, and 3
+    -----------------
+  - | 1 | 2 | 3 | 4 |
+    -----------------
+  ^ Side button is key 5
+  *Pinout is 2, 3, 4, 5, 7
 
   For more info, please visit:
   ----> http://thnikk.moe/
@@ -37,17 +39,22 @@
 // Uncomment if you're using an RGBW model
 // #define RGBW
 
-// How many keys (0 indexed)
-const byte numkeys = 2;
+// Version number (increment to update EEPROM values)
+bool version = 1;
+// Inital EEPROM value arrays
+byte initColor[] = {50, 100, 150, 200};
+char initMapping[] = {"zxcv"};
+
+const byte numkeys = 4;
 
 // Array for buttons (for use in for loop.)
-const byte button[] = { 2, 4, 5 };
+const byte button[] = { 2, 3, 4, 5, 7 };
 
 // Makes button press/release action happen only once
-bool pressed[2];
+bool pressed[4];
 
 // Array for storing bounce values
-bool bounce[3];
+bool bounce[5];
 
 unsigned long previousMillis = 0;
 byte set = 0;
@@ -56,52 +63,24 @@ byte set = 0;
 Bounce b1d = Bounce();
 Bounce b2d = Bounce();
 Bounce b3d = Bounce();
+Bounce b4d = Bounce();
+Bounce b5d = Bounce();
 
 // Neopixel
 #ifdef RGBW
-  Adafruit_NeoPixel pixels = Adafruit_NeoPixel(numkeys, 3, NEO_GRBW + NEO_KHZ800);
+  Adafruit_NeoPixel pixels = Adafruit_NeoPixel(numkeys, 6, NEO_GRBW + NEO_KHZ800);
 #else
-  Adafruit_NeoPixel pixels = Adafruit_NeoPixel(numkeys, 3, NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel pixels = Adafruit_NeoPixel(numkeys, 6, NEO_GRB + NEO_KHZ800);
 #endif
 
-// Arrays for modifier interpreter
-byte specialLength = 31; // Number of "special keys"
-String specialKeys[] = {
-  "shift", "ctrl", "super",
-  "alt", "f1", "f2", "f3",
-  "f4", "f5", "f6", "f7",
-  "f8", "f9", "f10", "f11",
-  "f12", "insert",
-  "delete", "backspace",
-  "enter", "home", "end",
-  "pgup", "pgdn", "up",
-  "down", "left", "right",
-  "tab", "escape", "altGr"
-};
-byte specialByte[] = {
-  129, 128, 131, 130,
-  194, 195, 196, 197,
-  198, 199, 200, 201,
-  202, 203, 204, 205,
-  209, 212, 178, 176,
-  210, 213, 211, 214,
-  218, 217, 216, 215,
-  179, 177, 134
-};
-
-byte inputBuffer; // Stores specialByte after conversion
-
 // Multidimensional arrays
-char mapping[2][3];
-byte rgb[2][3];
-
-// Version number (change to update EEPROM values {can only be 0 or 1})
-bool version = 0;
+char mapping[4][3];
+byte rgb[4][3];
 
 // Universal
-byte ledMode = 0;
-byte numModes = 6;
-byte b = 127;  // Brightness
+byte ledMode = 1;
+byte numModes = 7;
+float brightness = 1.0;
 
 // Cycle LED Mode
 unsigned long cycleSpeed = 10;  // Edit to change cycle speed, higher is slower
@@ -109,13 +88,13 @@ byte cycleWheel = 0;            // Cycle wheel counter
 unsigned long cycleMillis = 0;  // Millis counter
 
 // Reactive LED mode
-byte colorState[2];             // States between white, rainbow, fadeout, and off (per key)
-byte reactiveWheel[2];          // Reactive wheel counter
+byte colorState[4];             // States between white, rainbow, fadeout, and off (per key)
+byte reactiveWheel[4];          // Reactive wheel counter
 unsigned long reactSpeed = 0;
 unsigned long reactMillis = 0;
 
 // Custom LED mode
-byte customWheel[2];
+byte customWheel[4];
 unsigned long customMillis = 0;
 unsigned long customSpeed = 5;
 
@@ -128,6 +107,9 @@ byte bpsCount = 0;
 byte bpsBuffer = 170;
 byte bpsFix = 170;
 
+// Color moodes
+byte colors[] = { 160, 20, 20, 160 };
+
 // Side button
 unsigned long s = 500;
 unsigned long m = 1500;
@@ -136,6 +118,32 @@ unsigned long brightMillis = 0;
 byte hold = 0;
 byte blink = 0;
 
+byte specialLength = 29; // Number of "special keys"
+String specialKeys[] = {
+  "shift", "ctrl", "super",
+  "alt", "f1", "f2", "f3",
+  "f4", "f5", "f6", "f7",
+  "f8", "f9", "f10", "f11",
+  "f12", "insert",
+  "delete", "backspace",
+  "enter", "home", "end",
+  "pgup", "pgdn", "up",
+  "down", "left", "right",
+  "tab"
+};
+byte specialByte[] = {
+  129, 128, 131, 130,
+  194, 195, 196, 197,
+  198, 199, 200, 201,
+  202, 203, 204, 205,
+  209, 212, 178, 176,
+  210, 213, 211, 214,
+  218, 217, 216, 215,
+  179
+};
+
+byte inputBuffer; // Stores specialByte after conversionr; // Stores specialByte after conversion
+
 void setup() {
   Serial.begin(9600);
   pixels.begin();
@@ -143,7 +151,7 @@ void setup() {
   loadEEPROM();
 
   // Set input pullup resistors
-  for (int x = 0; x < 3; x++) {
+  for (int x = 0; x <= numkeys; x++) {
    pinMode(button[x], INPUT_PULLUP);
   }
 
@@ -154,19 +162,19 @@ void setup() {
   b2d.interval(8);
   b3d.attach(button[2]);
   b3d.interval(8);
+  b4d.attach(button[3]);
+  b4d.interval(8);
+  b5d.attach(button[4]);
+  b5d.interval(8);
 }
 
 void loadEEPROM() {
   // Initialize EEPROM
   if (EEPROM.read(0) != version) {
-    // Inital EEPROM value arrays go here to not waste system memory
-    byte initColor[] = {100, 200};
-    char initMapping[] = {"zx"};
-
     // Single values
-    EEPROM.write(0, version);
-    EEPROM.write(20, ledMode); // Start LED mode on cycle for testing
-    EEPROM.write(21, b);// Start brightness at half
+    EEPROM.write(0, version); // Update version
+    EEPROM.write(20, 0); // Start LED mode on cycle for testing
+    EEPROM.write(21, 50);// Start brightness at half
     for (int x = 0; x < numkeys; x++) {
       EEPROM.write(30+x,initColor[x]);
       for (int  y= 0; y < 3; y++) {
@@ -176,7 +184,7 @@ void loadEEPROM() {
     }
   }
 
-  // Load EEPROM
+  // Load values from EEPROM
   for (int x = 0; x < numkeys; x++) {
     // Load button mapping
     for (int  y= 0; y < 3; y++) {
@@ -186,15 +194,22 @@ void loadEEPROM() {
     customWheel[x] = EEPROM.read(30+x);
   }
   ledMode = EEPROM.read(20);
-  b = EEPROM.read(21);
+  brightness = EEPROM.read(21);
+  brightness = brightness / 100;
 }
+
+int pollTest = 0;
 
 void loop() {
 
   // Run to get latest bounce values
   bounceSetup(); // Moved here for program-wide access to latest debounced button values
 
+  pollTest++;
+
   if ((millis() - previousMillis) > 1000) { // Check once a second to reduce overhead
+    Serial.println(pollTest);
+    pollTest = 0;
     if (Serial && set == 0) { // Run once when serial monitor is opened to avoid flooding the serial monitor
       Serial.println("Please press 0 to enter the serial remapper.");
       set = 1;
@@ -212,20 +227,21 @@ void loop() {
   if (ledMode == 2) reactive(1);
   if (ledMode == 3) custom();
   if (ledMode == 4) BPS();
-  if (ledMode == 5) colorChange();
+  if (ledMode == 5) taiko();
+  if (ledMode == 6) colorChange();
 
   keyboard();
 }
 
 void sideButton() {
   // Press action: Sets hold value depending on how long the side button is held
-  if (!bounce[2]) {
+  if (!bounce[4]) {
     if ((millis() - sideMillis) > 8 && (millis() - sideMillis) < s)  hold = 1;
     if ((millis() - sideMillis) > s && (millis() - sideMillis) < m)  hold = 2;
     if ((millis() - sideMillis) > m) hold = 3;
   }
   // Release action
-  if (bounce[2]) {
+  if (bounce[4]) {
     // Press and release escape
     if (hold == 1) {
       Keyboard.press(KEY_ESC);
@@ -235,8 +251,8 @@ void sideButton() {
     // Change LED mode
     if (hold == 2) {
       ledMode++;
-      for (int x = 0; x < 2; x++) for (int y = 0; y < 3; y++) rgb[x][y] = 0; // Clear colors
-      if (ledMode > (numModes-1)) ledMode = 0; // numModes -1 for 0 index
+      for (int x = 0; x < numkeys; x++) for (int y = 0; y < 3; y++) rgb[x][y] = 0; // Clear colors
+      if (ledMode > (numModes - 1)) ledMode = 0;
       EEPROM.write(20, ledMode);
     }
     // Save custom colors or brightness
@@ -247,10 +263,10 @@ void sideButton() {
           EEPROM.write(30+x, customWheel[x]);
         }
       }
-      // Save b to EEPROM
+      // Save brightness to EEPROM
       if (ledMode != 3) {
         for (int x = 0; x < numkeys; x++) {
-          EEPROM.write(21, b);
+          EEPROM.write(21, brightness * 100);
         }
       }
     }
@@ -258,17 +274,17 @@ void sideButton() {
     sideMillis = millis();
   }
 
-  // brightness changer
+  // Brightness changer
   if (hold == 3 && ledMode != 3) {
     // Poll 10 times a second
-    if ((millis() - brightMillis) > 10) {
+    if ((millis() - brightMillis) > 50) {
       // Lower brightness
       if (!bounce[0]) {
-        if (b > 10) b--;
+        if (brightness > 0.1) brightness-=0.02;
       }
       // Raise brightness
       if (!bounce[1]) {
-        if (b < 255) b++;
+        if (brightness < 0.98) brightness+=0.02;
       }
       brightMillis = millis();
     }
@@ -277,19 +293,19 @@ void sideButton() {
   // Blink code
   if (blink != hold) {
     if (hold == 2) {
-      for (int x = 0; x < 2; x++) setColor(0, x);
+      for (int x = 0; x < numkeys; x++) setColor(0, x);
       pixels.show();
       delay(20);
-      for (int x = 0; x < 2; x++) setColor(255, x);
+      for (int x = 0; x < numkeys; x++) setColor(255, x);
       pixels.show();
       delay(50);
     }
     if (hold == 3) {
       for (int y = 0; y < 2; y++) {
-        for (int x = 0; x < 2; x++) setColor(0, x);
+        for (int x = 0; x < numkeys; x++) setColor(0, x);
         pixels.show();
         delay(20);
-        for (int x = 0; x < 2; x++) setColor(255, x);
+        for (int x = 0; x < numkeys; x++) setColor(255, x);
         pixels.show();
         delay(50);
       }
@@ -310,6 +326,7 @@ void cycle() {
     cycleMillis = millis();
   }
 }
+
 
 void reactive(byte flip) {
   if ((millis() - reactMillis) > reactSpeed) {
@@ -370,7 +387,7 @@ void reactive(byte flip) {
 
 void custom() {
   if ((millis() - customMillis) > customSpeed) {
-    for (int x = 0; x < 2; x++){
+    for (int x = 0; x < numkeys; x++){
       // When side button is held
       if (hold == 3) {
         // When key is pressed
@@ -397,7 +414,7 @@ void custom() {
 void BPS() {
   // Check counter every second, apply multiplier to wheel, and wipe counter
   if ((millis() - bpsMillis) > bpsUpdate) {
-    bpsFix = 170-(bpsCount*17);                     // Start at blue and move towards red
+    bpsFix = 170-(bpsCount*9);                      // Start at blue and move towards red
     if (bpsFix < 0) bpsFix = 0;                     // Cap color at red
     bpsCount = 0;                                   // Reset counter
     bpsMillis = millis();                           // Reset millis timer
@@ -405,7 +422,7 @@ void BPS() {
   if ((millis() - bpsMillis2) > 5) {                // Run once every five ms for smooth fades
     if (bpsBuffer < bpsFix) bpsBuffer++;            // Fade up if buffer value is lower
     if (bpsBuffer > bpsFix) bpsBuffer--;            // Fade down if buffer value is higher
-    for (int x = 0; x < 2; x++) {
+    for (int x = 0; x < numkeys; x++) {
       wheel(bpsBuffer, x);                          // convert wheel value to rgb values in array
         setLED(x);
         if (!bounce[x]) setColor(255, x);
@@ -413,6 +430,15 @@ void BPS() {
     pixels.show();                                  // Update LEDs
     bpsMillis2 = millis();                          // Reset secondary millis timer
   }
+}
+
+void taiko() {
+  for (int x = 0; x < numkeys; x++) {
+    wheel(colors[x], x);
+    setLED(x);
+    if (!bounce[x] && hold != 3) setColor(255, x);
+  }
+  pixels.show();
 }
 
 // Subfunctions for LED modes
@@ -438,20 +464,19 @@ void wheel(byte shortColor, byte key) {
 
 void setLED(byte key) {
   #ifdef RGBW
-    pixels.setPixelColor(key, pixels.Color(b*rgb[key][0]/255, b*rgb[key][1]/255, b*rgb[key][2]/255, 0));
+    pixels.setPixelColor(key, pixels.Color(rgb[key][0] * brightness, rgb[key][1] * brightness, rgb[key][2] * brightness, 0));
   #else
-    pixels.setPixelColor(key, pixels.Color(b*rgb[key][0]/255, b*rgb[key][1]/255, b*rgb[key][2]/255));
+    pixels.setPixelColor(key, pixels.Color(rgb[key][0] * brightness, rgb[key][1] * brightness, rgb[key][2] * brightness));
   #endif
 }
 
 void setColor(byte color, byte key) {
   #ifdef RGBW
-    pixels.setPixelColor(key, pixels.Color(b*color/255, b*color/255, b*color/255, 0));
+    pixels.setPixelColor(key, pixels.Color(color * brightness, color * brightness, color * brightness, 0));
   #else
-    pixels.setPixelColor(key, pixels.Color(b*color/255, b*color/255, b*color/255));
+    pixels.setPixelColor(key, pixels.Color(color * brightness, color * brightness, color * brightness));
   #endif
 }
-
 
 // Remapper code
 // Allows keys to be remapped through the serial monitor
@@ -629,10 +654,14 @@ void bounceSetup() {
   b1d.update();
   b2d.update();
   b3d.update();
+  b4d.update();
+  b5d.update();
 
   bounce[0] = b1d.read();
   bounce[1] = b2d.read();
   bounce[2] = b3d.read();
+  bounce[3] = b4d.read();
+  bounce[4] = b5d.read();
 }
 
 // Does keyboard stuff
@@ -691,15 +720,4 @@ void colorChange(){
     changeMillis = millis();
   }
 
-}
-
-// LED mode for use when remapper is active and keypad is waiting for user input
-byte colorCount;
-unsigned long idleMillis;
-unsigned long idleSpeed = 1; // Speed of effect (lower is faster)
-byte idleColors[numkeys][3];
-void idleEffect(){
-  if ((millis() - idleMillis) > idleSpeed) {
-
-  }
 }

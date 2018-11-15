@@ -1,26 +1,24 @@
 /* Future Tone Controller
-This controller was made for Hatsune Miku
-Project Diva Future Tone for PS4. It also
-works with Project Diva X, but despite
-the DualShock 4's compatibility with the
-PSTV, it isn't fully compatible with
-previous games since there are no analog
-sticks.
+SUMMARY
+This controller was made for Hatsune Miku Project Diva
+Future Tone for PS4. It also works with Project Diva X,
+but despite the DualShock 4's compatibility with the
+PSTV, it isn't fully compatible with previous games
+since there are no analog sticks.
 
-This controller utilizes both a Brook PS4
-Fight board and a Teensy LC. The inputs
-are taken into the Teensy and pushed out
-to the fight board to allow for remapping
-and input processing to control the LEDs
-in the controller.
+This controller utilizes both a Brook PS4 Fight
+board and a Teensy LC. The inputs are taken into
+the Teensy and pushed out to the fight board to
+allow for remapping and input processing to control
+the LEDs in the controller.
+
 
 PINOUT
-This isn't a 1:1 representation since the
-layout is a little bit different on the
-actuall controller (up and down keys are
-directly adjacent, there's no space in the
-middle like there is on here) but that's
-just because everything needed to be on a
+This isn't a 1:1 representation since the layout
+is a little bit different on the actuall controller
+(up and down keys are directly adjacent, there's
+no space in the middle like there is on here) but
+that's just because everything needed to be on a
 seperate line.
 
         Labels                  Pins
@@ -32,10 +30,22 @@ ______________________  ______________________
 |      | TP  |       |  |      |     |       |
 ----------------------  ----------------------
 
-*LED pin is 17. Any unlabeled pins connect
-directly to the Brook board and do not connect
-to the Teensy. Outputs and all other pins are
-defined below.
+*LED pin is 17. Any unlabeled pins connect directly
+to the Brook board and do not connect to the Teensy.
+Outputs and all other pins are defined below.
+
+
+LED ADDRESSES
+This is the order of the LEDs (how they are wired.)
+This is matched with the inputs using the inToColors
+array.
+______________________
+|  |11|  |10|  | 9|  |
+|12| 0|  |  |  | 7| 8|
+| 1|  | 3|  | 4|  | 6|
+|  | 2| ______ | 5|  |
+|      |     |       |
+----------------------
 
 Written by: thnikk
 Website: thnikk.moe
@@ -48,8 +58,8 @@ twitter: @thnikk
 #include <EEPROM.h>
 #include <Bounce2.h>
 
-#define version 0
-// #define DEBUG
+#define version 1
+#define DEBUG
 
 // LEDs
 #define ledPin     17
@@ -92,14 +102,13 @@ byte output[2][numkeys] ={
 // This can be replaced by using inputs to assign colors rahter than doing it manually.
 byte colors[2][numpixels] ={
   { green, pink, blue, red, pink, blue, red, green, yellow, yellow, pink, yellow, yellow},
-  // { green, green, green, green, green, green, green, green, green, green, green, green, green},
   { green, green, pink, pink, blue, red, red, blue, yellow, yellow, purple, yellow, yellow }
 };
 
 
 byte colorBrightness[numpixels]; // Per-key brightness (processed seperately from b)
 byte mode = 0; // Default mode value
-byte b = 10; // Brightness
+byte b = 50; // Brightness
 
 unsigned long previousMillis;
 unsigned long debugMillis;
@@ -112,6 +121,31 @@ unsigned long s = 500;
 unsigned long brightMillis;
 byte blink = 0;
 Bounce sb = Bounce();
+
+// sweep effect
+/*
+byte sweepMap[2][7] = {
+  { 255, 0, 255, 255, 255, 7, 255 },
+  {   1, 2,   3, 255,   4, 5,   6 }
+};
+
+bool LR[2] = { 0, 0 };
+byte sweepRow[7] = { 0, 0, 0, 0, 0, 0, 0 };
+unsigned long sweepMillis[2];
+
+void sweep(){
+  if (!digitalRead(12) || !digitalRead(11)) {
+    if ((millis() - sweepMillis[0]) < 127) sweepRow[0] = sweepRow[0] + 1;
+    if ((millis() - sweepMillis[0]) > 127 && millis() - sweepMillis[0]) < 127*3) {
+      sweepRow[0] = sweepRow[0] + 1;
+
+  }
+  if (!digitalRead(9) || !digitalRead(10)) LR[1] = 1;  // Right
+  if (digitalRead(12) && digitalRead(11)) sweepMillis[0] = millis();
+  if (digitalRead(9) && digitalRead(10)) sweepMillis[1] = millis();
+
+
+}*/
 
 void setup(){
   #if defined (DEBUG)
@@ -162,7 +196,7 @@ void loop(){
   }
 
   #if defined (DEBUG)
-  if ((millis() - debugMillis) > 1000) {
+  if ((millis() - debugMillis) > 1000) {/*
     for (byte x=0; x < numpixels; x++){
       Serial.print(digitalRead(inToColors[x]));
       if (x!=numpixels-1)Serial.print(", ");
@@ -173,12 +207,14 @@ void loop(){
       Serial.print(colors[mode][x]);
       if (x!=numpixels-1)Serial.print(", ");
     }
-    Serial.println();
+    Serial.println();*/
 
     // side button states
     Serial.print(digitalRead(modePin));
-    Serial.print(digitalRead(', '));
-    Serial.println(sb.read());
+    Serial.print(", ");
+    Serial.print(sb.read());
+    Serial.print(", ");
+    Serial.println(mode);
     debugMillis = millis();
   }
   #endif

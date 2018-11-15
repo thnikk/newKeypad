@@ -80,7 +80,7 @@ byte specialByte[] = {
 
 byte inputBuffer; // Stores specialByte after conversion
 
-byte b = 255; // LED brightness
+byte b = 50; // LED brightness
 
 // MacroPad Specific
 
