@@ -1,3 +1,3 @@
 # newKeypad
 
-This repository will house all of the documentation of my keypads.
+Code for old pro micro keypads (pre March 2018)
